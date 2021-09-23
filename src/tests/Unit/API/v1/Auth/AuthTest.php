@@ -1,13 +1,14 @@
 <?php
 
-namespace Tests\Unit\Http\Controllers\API\V01\Auth;
+namespace Tests\Unit\API\v1\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
-class AuthControllerTest extends TestCase
+class AuthTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -17,7 +18,7 @@ class AuthControllerTest extends TestCase
     public function test_register_should_be_validate()
     {
         $response = $this->postJson('api/v1/auth/register');
-        $response->assertStatus(404);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_new_user_can_register()
@@ -27,7 +28,7 @@ class AuthControllerTest extends TestCase
             "email" => "mehran@yahoo.com",
             "password" => "mehran123"
         ]);
-        $response->assertStatus(404);
+        $response->assertStatus(Response::HTTP_CREATED);
     }
 
     /**
@@ -35,7 +36,7 @@ class AuthControllerTest extends TestCase
      */
     public function test_login_should_be_validate() {
         $response = $this->postJson('api/v1/auth/login');
-        $response->assertStatus(404);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     // public function test_user_can_login_with_true_credentials()
@@ -57,7 +58,7 @@ class AuthControllerTest extends TestCase
 
         $response = $this->actingAs($user)->get('api/v1/auth/user');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     /**
@@ -69,6 +70,6 @@ class AuthControllerTest extends TestCase
 
         $response = $this->actingAs($user)->postJson('api/v1/auth/logout');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 }

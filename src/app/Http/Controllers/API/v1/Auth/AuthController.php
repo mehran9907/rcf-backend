@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API\V01\Auth;
+namespace App\Http\Controllers\API\v1\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -33,7 +34,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => "user created successfully"
-        ] . 201);
+        ] . Response::HTTP_CREATED);
     }
 
     /**
@@ -53,7 +54,7 @@ class AuthController extends Controller
 
         // Check user credentials for login
         if (Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json(Auth::user(), 200);
+            return response()->json(Auth::user(), Response::HTTP_OK);
         }
 
         throw ValidationException::withMessages([
@@ -63,7 +64,7 @@ class AuthController extends Controller
 
     public function user()
     {
-        return response()->json(Auth::user(), 200);
+        return response()->json(Auth::user(), Response::HTTP_OK);
     }
 
     public function logout()
@@ -72,6 +73,6 @@ class AuthController extends Controller
 
         return response()->json([
             "message" => "logged out successfully"
-        ]);
+        ], Response::HTTP_OK);
     }
 }
